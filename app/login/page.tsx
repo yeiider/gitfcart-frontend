@@ -12,7 +12,6 @@ import { Separator } from '@/components/ui/separator'
 import {AlertCircle, Facebook, Loader2} from 'lucide-react'
 
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-import {toast} from "@/hooks/use-toast";
 
 export default function LoginPage() {
     const [identifier, setIdentifier] = useState('')
