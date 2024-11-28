@@ -8,7 +8,6 @@ import {Input} from '@/components/ui/input'
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card'
 import {Label} from '@/components/ui/label'
 import {AlertCircle, Loader2} from 'lucide-react'
-import {useToast} from "@/components/ui/use-toast"
 
 import {loginWithRest} from "@/lib/useAuth";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
@@ -18,7 +17,6 @@ export default function LoginPage() {
     const [password, setPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
-    const {toast} = useToast()
 
 
     const saveSession = (jwt: string) => {
@@ -36,10 +34,7 @@ export default function LoginPage() {
             const {jwt} = data;
             saveSession(jwt);
             setIsLoading(true)
-            toast({
-                title: "Inicio de sesión exitoso",
-                description: `Bienvenido, ${data.user.name}!`,
-            })
+
             setError("")
             window.location.href = "/dashboard";
         } catch (error) {
