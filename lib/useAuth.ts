@@ -1,6 +1,6 @@
 import {LoginResponseInterface} from "@/app/interfaces/loginResponseInterface";
 
-export async function loginWithRest(email: string, password: string): Promise<object> {
+export async function loginWithRest(email: string, password: string): Promise<LoginResponseInterface> {
     const url = 'http://127.0.0.1:1337/api/auth/local';
 
     const response = await fetch(url, {
