@@ -96,7 +96,7 @@ export async function logout() {
     try {
         const response = await fetch('http://127.0.0.1:1337/api/auth/logout', {
             method: 'POST',
-            credentials: 'include', // Asegura que las cookies se envíen con la solicitud
+            credentials: 'include',
         });
 
         if (!response.ok) {
