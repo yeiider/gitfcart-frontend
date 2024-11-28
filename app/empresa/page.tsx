@@ -66,7 +66,7 @@ export default function EmpresaView() {
     const chargeAmount = parseFloat(amount)
     if (isNaN(chargeAmount) || chargeAmount <= 0) {
       setMessage({ type: 'error', content: 'Por favor, ingrese un monto válido' })
-    } else if (chargeAmount > giftCard?.balance) {
+    } else if (chargeAmount > giftCard?.balance ?? 0.0) {
       setMessage({ type: 'error', content: 'Saldo insuficiente en la Gift Card' })
     } else {
       giftCardData.balance -= chargeAmount
