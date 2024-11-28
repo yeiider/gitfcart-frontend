@@ -7,11 +7,7 @@ export async function POST(request: Request) {
         const data = await loginWithRest(identifier, password);
         const { jwt, user } = data;
         const response = NextResponse.json({ message: "Login successful", user: user });
-        response.cookies.set("jwt", jwt, {
-            path: "/",
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-        } as any);
+        response.cookies.set("jwt", jwt, {path: "/", httpOnly: true, secure: process.env.NODE_ENV === "production",});
 
         return response;
     } catch (error) {

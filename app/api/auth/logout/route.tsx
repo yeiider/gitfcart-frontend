@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     const response = NextResponse.redirect(`${baseUrl}/login`);
 
