@@ -39,7 +39,13 @@ export default function LoginPage() {
             window.location.href = "/dashboard";
         } catch (error) {
             setIsLoading(false)
-            setError("" + error.message)
+            setIsLoading(false);
+
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError("Ha ocurrido un error inesperado");
+            }
         }
     }
 
