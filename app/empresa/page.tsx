@@ -60,15 +60,15 @@ export default function EmpresaView() {
   const handleCharge = async () => {
     setIsLoading(true)
     setMessage({ type: '', content: '' })
-    
+
     await new Promise(resolve => setTimeout(resolve, 1500))
-    
+
     const chargeAmount = parseFloat(amount)
     if (isNaN(chargeAmount) || chargeAmount <= 0) {
       setMessage({ type: 'error', content: 'Por favor, ingrese un monto válido' })
-    } else if (chargeAmount > giftCard?.balance ?? 0.0) {
+    } else if (giftCard && chargeAmount > giftCard.balance) {
       setMessage({ type: 'error', content: 'Saldo insuficiente en la Gift Card' })
-    } else {
+    } else if (giftCard) {
       giftCardData.balance -= chargeAmount
       setGiftCard({ ...giftCardData })
       setMessage({ type: 'success', content: `Cobro de $${chargeAmount.toFixed(2)} realizado con éxito` })
@@ -76,6 +76,7 @@ export default function EmpresaView() {
     }
     setIsLoading(false)
   }
+
 
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-6">
