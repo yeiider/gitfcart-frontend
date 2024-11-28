@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { CreditCard, Search } from 'lucide-react'
+import Link from "next/link";
 
 export default function GiftCardsPage() {
   return (
@@ -65,9 +66,11 @@ export default function GiftCardsPage() {
                 <Button variant="outline" size="sm">
                   Ver Historial
                 </Button>
-                <Button size="sm">
-                  Ver Detalles
-                </Button>
+                  <Link href={`/dashboard/gift-cards/${card.id}`}>
+                      <Button size="sm">
+                          Ver Detalles
+                      </Button>
+                  </Link>
               </div>
             </CardContent>
           </Card>

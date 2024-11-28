@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, CreditCard, Calendar, DollarSign } from 'lucide-react'
+import {Skeleton} from "@/components/ui/skeleton";
 
 interface GiftCard {
   id: string;
@@ -22,6 +23,37 @@ const giftCardData: GiftCard = {
   expirationDate: '2024-12-31',
   purchaseDate: '2024-01-15',
 }
+
+function GiftCardSkeleton() {
+  return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-64" />
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-48" />
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-2">
+              {[1, 2, 3, 4].map((i) => (
+                  <Card key={i}>
+                    <CardHeader className="pb-2">
+                      <Skeleton className="h-4 w-24" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-8 w-32" />
+                    </CardContent>
+                  </Card>
+              ))}
+            </div>
+            <div className="flex justify-end">
+              <Skeleton className="h-10 w-48" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+  )
+}
+
 
 export default function GiftCardDetailsPage() {
   const router = useRouter()
@@ -40,7 +72,7 @@ export default function GiftCardDetailsPage() {
   }, [params.id])
 
   if (!giftCard) {
-    return <div className="flex justify-center items-center h-screen">Cargando...</div>
+    return <GiftCardSkeleton />
   }
 
   return (

@@ -1,9 +1,8 @@
 import {LoginResponseInterface} from "@/app/interfaces/loginResponseInterface";
-import { NextRequest } from "next/server";
+import {NextRequest} from "next/server";
 
 export async function loginWithRest(email: string, password: string): Promise<LoginResponseInterface> {
-    const url = 'http://127.0.0.1:1337/api/auth/local';
-
+    const url = `${process.env.URL_BACKEND}api/auth/local`
     const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -16,13 +15,8 @@ export async function loginWithRest(email: string, password: string): Promise<Lo
         throw await response.json();
     }
 
-    const data: LoginResponseInterface = await response.json();
-
-    document.cookie = `jwt=${data.jwt}; Path=/; HttpOnly; Secure`;
-
-    return data;
+    return await response.json();
 }
-
 
 export async function isLoggedInServer(req:NextRequest) {
     const token = req.headers.get("cookie")?.split(";").find((c) => c.trim().startsWith("jwt="));
@@ -33,7 +27,7 @@ export async function isLoggedInServer(req:NextRequest) {
     const jwt = token.split("=")[1];
     try {
 
-        const response = await fetch(`http://127.0.0.1:1337/api/users/me`, {
+        const response = await fetch(`${process.env.URL_BACKEND}api/users/me`, {
             headers: {
                 Authorization: `Bearer ${jwt}`,
             },
@@ -65,7 +59,7 @@ export async function isLoggedInClient() {
 
     const jwt = token.split("=")[1]; // Extrae el token JWT
     try {
-        const response = await fetch(`http://127.0.0.1:1337/api/users/me`, {
+        const response = await fetch(`${process.env.URL_BACKEND}api/users/me`, {
             headers: {
                 Authorization: `Bearer ${jwt}`,
             },
@@ -90,21 +84,3 @@ export function sessionToken(req:NextRequest) {
     return token.split("=")[1];
 }
 
-export async function logout() {
-
-    document.cookie = "jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC; Secure; HttpOnly";
-    document.cookie = "user=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC; Secure";
-
-    try {
-        const response = await fetch('http://127.0.0.1:1337/api/auth/logout', {
-            method: 'POST',
-            credentials: 'include',
-        });
-
-        if (!response.ok) {
-            console.error("Error cerrando sesión en el servidor:", await response.text());
-        }
-    } catch (error) {
-        console.error("Error al cerrar sesión:", error);
-    }
-}

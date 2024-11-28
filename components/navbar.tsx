@@ -8,10 +8,8 @@ export function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Verifica si existe la cookie "jwt"
-    const cookies = document.cookie.split(';');
-    const jwtCookie = cookies.find((cookie) => cookie.trim().startsWith('jwt='));
-    setIsLoggedIn(!!jwtCookie); // Si la cookie existe, establece isLoggedIn en true
+    const userCookie = document.cookie.split('; ').find(c => c.startsWith('user='));
+    setIsLoggedIn(!!userCookie); // Si la cookie existe, establece isLoggedIn en true
   }, []);
 
   return (

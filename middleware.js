@@ -1,4 +1,4 @@
-import { NextResponse,NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { isLoggedInServer } from "./lib/useAuth";
 
 export async function middleware(req) {
@@ -7,7 +7,6 @@ export async function middleware(req) {
 
     if (user) {
         const response = NextResponse.next();
-        console.log(user)
         response.cookies.set('user', JSON.stringify(user), { httpOnly: false, path: '/' });
         return response;
     }

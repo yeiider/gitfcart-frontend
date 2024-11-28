@@ -9,7 +9,6 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {Label} from '@/components/ui/label'
 import {AlertCircle, Loader2} from 'lucide-react'
 
-import {loginWithRest} from "@/lib/useAuth";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 
 export default function LoginPage() {
@@ -18,27 +17,28 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
 
-
-    const saveSession = (jwt: string) => {
-        document.cookie = `jwt=${jwt}; Path=/; Secure; SameSite=Strict`;
-    };
-
-
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsLoading(true)
-
+        e.preventDefault();
+        setIsLoading(true);
+        setError("");
 
         try {
-            const data = await loginWithRest(identifier, password);
-            const {jwt} = data;
-            saveSession(jwt);
-            setIsLoading(true)
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ identifier, password }),
+            });
 
-            setError("")
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Error en el inicio de sesión");
+            }
+
+
             window.location.href = "/dashboard";
         } catch (error) {
-            setIsLoading(false)
             setIsLoading(false);
 
             if (error instanceof Error) {
@@ -47,7 +47,8 @@ export default function LoginPage() {
                 setError("Ha ocurrido un error inesperado");
             }
         }
-    }
+    };
+
 
 
     return (

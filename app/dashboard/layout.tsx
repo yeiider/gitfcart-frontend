@@ -2,13 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import {usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard, CreditCard, Settings, Menu, X, LogOut } from 'lucide-react';
 import UserName from "@/app/dashboard/userName";
 import { AuthProvider } from "@/app/context/AuthContext";
-import {logout} from "@/lib/useAuth";
 
 const menuItems = [
   {
@@ -31,13 +30,25 @@ const menuItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
 
-  // Función para cerrar sesión
-  const handleLogout = () => {
-    logout().then(() =>
-        router.push('/login')
-    )
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+
+        window.location.href = '/login';
+      } else {
+        console.error('Failed to logout:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
 
   return (
