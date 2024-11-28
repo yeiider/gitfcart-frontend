@@ -9,6 +9,21 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Loader2, CheckCircle, XCircle, CreditCard, DollarSign, Store } from 'lucide-react'
 import { GiftCardSkeleton } from '@/components/loading-skeleton'
 
+
+interface Transaction {
+  date: string
+  amount: number
+  description: string
+}
+
+interface GiftCard {
+  id: string
+  balance: number
+  lastUsed: string
+  transactions: Transaction[]
+}
+
+
 const giftCardData = {
   id: '1234',
   balance: 100,
@@ -22,11 +37,11 @@ const giftCardData = {
 export default function EmpresaView() {
   const [giftCardId, setGiftCardId] = useState('')
   const [amount, setAmount] = useState('')
-  const [giftCard, setGiftCard] = useState<{lastUsed: string, balance: number, id: string, transactions: {date: string, amount: number, description: string}[]} | null>(null)
+  const [giftCard, setGiftCard] = useState<GiftCard | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState({ type: '', content: '' })
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
     setMessage({ type: '', content: '' })
