@@ -19,7 +19,6 @@ export default function LoginPage() {
     const [password, setPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
-    const router = useRouter()
     const {toast} = useToast()
 
 
@@ -35,7 +34,7 @@ export default function LoginPage() {
 
         try {
             const data = await loginWithRest(identifier, password);
-            const {jwt, user} = data;
+            const {jwt} = data;
             saveSession(jwt);
             setIsLoading(true)
             toast({

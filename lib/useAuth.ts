@@ -1,5 +1,5 @@
 
-export async function loginWithRest(email: string, password: string): Promise<any> {
+export async function loginWithRest(email: string, password: string): Promise<object> {
     const url = 'http://127.0.0.1:1337/api/auth/local';
 
     const response = await fetch(url, {

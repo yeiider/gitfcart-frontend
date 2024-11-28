@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   // Función para cerrar sesión
   const handleLogout = () => {
-    logout().then(r =>
+    logout().then(() =>
         router.push('/login')
     )
   };

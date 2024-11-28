@@ -9,8 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Loader2, CheckCircle, XCircle, CreditCard, DollarSign, Store } from 'lucide-react'
 import { GiftCardSkeleton } from '@/components/loading-skeleton'
 
-// Simulación de datos de gift card
-let giftCardData = {
+const giftCardData = {
   id: '1234',
   balance: 100,
   lastUsed: '2023-06-25',
@@ -32,7 +31,6 @@ export default function EmpresaView() {
     setIsLoading(true)
     setMessage({ type: '', content: '' })
     
-    // Simulamos una llamada a la API
     await new Promise(resolve => setTimeout(resolve, 1500))
     
     if (giftCardId === giftCardData.id) {
@@ -48,7 +46,6 @@ export default function EmpresaView() {
     setIsLoading(true)
     setMessage({ type: '', content: '' })
     
-    // Simulamos una llamada a la API
     await new Promise(resolve => setTimeout(resolve, 1500))
     
     const chargeAmount = parseFloat(amount)

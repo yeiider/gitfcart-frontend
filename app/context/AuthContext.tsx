@@ -3,17 +3,16 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
-    user: any; // Cambia el tipo según los datos del usuario
-    setUser: (user: any) => void;
+    user: object;
+    setUser: (user: object) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<object>(null);
 
     useEffect(() => {
-        // Leer la cookie "user" para inicializar el estado
         const userCookie = document.cookie.split('; ').find(c => c.startsWith('user='));
         if (userCookie) {
             const userData = JSON.parse(decodeURIComponent(userCookie.split('=')[1]));
