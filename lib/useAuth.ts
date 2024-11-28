@@ -1,3 +1,4 @@
+import {LoginResponseInterface} from "@/app/interfaces/loginResponseInterface";
 
 export async function loginWithRest(email: string, password: string): Promise<object> {
     const url = 'http://127.0.0.1:1337/api/auth/local';
@@ -14,7 +15,7 @@ export async function loginWithRest(email: string, password: string): Promise<ob
         throw await response.json();
     }
 
-    const data = await response.json();
+    const data: LoginResponseInterface = await response.json();
 
     document.cookie = `jwt=${data.jwt}; Path=/; HttpOnly; Secure`;
 
@@ -28,7 +29,7 @@ export async function isLoggedInServer(req) {
         return null;
     }
 
-    const jwt = token.split("=")[1]; // Extrae el token JWT
+    const jwt = token.split("=")[1];
     try {
 
         const response = await fetch(`http://127.0.0.1:1337/api/users/me`, {
