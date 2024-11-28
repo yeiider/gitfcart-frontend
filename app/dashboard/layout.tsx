@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, CreditCard, Settings, Menu, X, LogOut, User } from 'lucide-react';
+import { LayoutDashboard, CreditCard, Settings, Menu, X, LogOut } from 'lucide-react';
 import UserName from "@/app/dashboard/userName";
 import { AuthProvider } from "@/app/context/AuthContext";
 import {logout} from "@/lib/useAuth";

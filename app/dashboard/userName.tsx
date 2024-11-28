@@ -2,7 +2,7 @@ import {User} from "lucide-react";
 import {useAuth} from "@/app/context/AuthContext";
 
 export default function UserName(){
-    const { user, setUser } = useAuth();
+    const { user } = useAuth();
     return(
         <>
             {user &&

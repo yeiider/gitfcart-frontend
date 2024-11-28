@@ -23,7 +23,7 @@ let giftCardData = {
 export default function EmpresaView() {
   const [giftCardId, setGiftCardId] = useState('')
   const [amount, setAmount] = useState('')
-  const [giftCard, setGiftCard] = useState(null)
+  const [giftCard, setGiftCard] = useState<{lastUsed: string, balance: number, id: string, transactions: {date: string, amount: number, description: string}[]} | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState({ type: '', content: '' })
 
@@ -54,7 +54,7 @@ export default function EmpresaView() {
     const chargeAmount = parseFloat(amount)
     if (isNaN(chargeAmount) || chargeAmount <= 0) {
       setMessage({ type: 'error', content: 'Por favor, ingrese un monto válido' })
-    } else if (chargeAmount > giftCard.balance) {
+    } else if (chargeAmount > giftCard?.balance) {
       setMessage({ type: 'error', content: 'Saldo insuficiente en la Gift Card' })
     } else {
       giftCardData.balance -= chargeAmount
@@ -193,7 +193,7 @@ export default function EmpresaView() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            <Alert variant={message.type === 'error' ? 'destructive' : 'default'}>
+            <Alert variant={(message.type === 'error' ? 'destructive' : 'default') as 'destructive' | 'default'}>
               {message.type === 'error' ? (
                 <XCircle className="h-4 w-4" />
               ) : (
