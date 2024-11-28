@@ -24,13 +24,13 @@ export default function ClienteView() {
   const [giftCard, setGiftCard] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (e:object) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
-    
+
     // Simulamos una llamada a la API
     await new Promise(resolve => setTimeout(resolve, 1500))
-    
+
     if (giftCardId === giftCardData.id) {
       setGiftCard(giftCardData)
     } else {
