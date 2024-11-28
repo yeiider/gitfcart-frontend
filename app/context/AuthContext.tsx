@@ -2,15 +2,31 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
+interface User {
+    id: number;
+    documentId: string;
+    username: string;
+    email: string;
+    provider: string;
+    confirmed: boolean;
+    blocked: boolean;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    name: string;
+    lastName: string;
+    rut: string;
+}
+
 interface AuthContextType {
-    user: object;
-    setUser: (user: object) => void;
+    user: User | null;
+    setUser: (user: User | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<object>(null);
+    const [user, setUser] = useState<User | null>(null); // Permite null o un objeto User
 
     useEffect(() => {
         const userCookie = document.cookie.split('; ').find(c => c.startsWith('user='));
