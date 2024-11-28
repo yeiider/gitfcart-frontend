@@ -8,7 +8,11 @@ import { Card, CardContent } from '@/components/ui/card'
 import { GiftCard } from '@/components/ui/icons'
 import { GiftCardSkeleton } from '@/components/loading-skeleton'
 
-// Simulación de datos de gift card
+type GiftCard = {
+  id: string
+  balance: number
+  transactions: { date: string; establishment: string; amount: number }[]
+}
 const giftCardData = {
   id: '1234',
   balance: 1.93,
@@ -18,10 +22,9 @@ const giftCardData = {
     { date: '2023-06-20', establishment: 'Librería Cultural', amount: 18.75 },
   ]
 }
-
 export default function ClienteView() {
   const [giftCardId, setGiftCardId] = useState('')
-  const [giftCard, setGiftCard] = useState(null)
+  const [giftCard, setGiftCard] = useState<GiftCard | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
