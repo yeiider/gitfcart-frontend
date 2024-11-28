@@ -24,7 +24,7 @@ export default function ClienteView() {
   const [giftCard, setGiftCard] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:object) => {
     e.preventDefault()
     setIsLoading(true)
     
