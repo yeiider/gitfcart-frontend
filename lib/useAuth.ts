@@ -1,4 +1,5 @@
 import {LoginResponseInterface} from "@/app/interfaces/loginResponseInterface";
+import { NextRequest } from "next/server";
 
 export async function loginWithRest(email: string, password: string): Promise<LoginResponseInterface> {
     const url = 'http://127.0.0.1:1337/api/auth/local';
@@ -23,7 +24,7 @@ export async function loginWithRest(email: string, password: string): Promise<Lo
 }
 
 
-export async function isLoggedInServer(req) {
+export async function isLoggedInServer(req:NextRequest) {
     const token = req.headers.get("cookie")?.split(";").find((c) => c.trim().startsWith("jwt="));
     if (!token) {
         return null;
@@ -81,7 +82,7 @@ export async function isLoggedInClient() {
     }
 }
 
-export function sessionToken(req) {
+export function sessionToken(req:NextRequest) {
     const token = req.headers.get("cookie")?.split(";").find((c) => c.trim().startsWith("jwt="));
     if (!token) {
         return null;
