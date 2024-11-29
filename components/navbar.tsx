@@ -20,11 +20,9 @@ export function Navbar() {
 
   const menuItems = isLoggedIn
       ? [
-        {href: '/', label: 'Inicio'},
         {href: '/dashboard', label: 'Dashboard'},
       ]
       : [
-        {href: '/', label: 'Inicio'},
         {href: '/login', label: 'Iniciar Sesión'},
         {href: '/register', label: 'Registrarse'},
       ];
