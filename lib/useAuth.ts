@@ -18,7 +18,7 @@ export async function loginWithRest(email: string, password: string): Promise<Lo
     return await response.json();
 }
 
-export async function createWithRest(username, password, email, name, lastName, rut): Promise<LoginResponseInterface> {
+export async function createWithRest(username: string | null, password:string | null, email:string | null, name:string | null, lastName:string | null, rut:string | null): Promise<LoginResponseInterface> {
 
 
     const apiUrl = `${process.env.URL_BACKEND}api/auth/local/register`
