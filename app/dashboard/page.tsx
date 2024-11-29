@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CreditCard, DollarSign, History } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {Skeleton} from "@/components/ui/skeleton";
+import {GiftCardSummary} from "@/app/interfaces/giftcardInterface";
 
 
 function DashboardSkeleton() {
@@ -62,7 +63,7 @@ function DashboardSkeleton() {
 }
 
 export default function DashboardPage() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<GiftCardSummary>(null);
 
   useEffect(() => {
     const fetchData = async () => {

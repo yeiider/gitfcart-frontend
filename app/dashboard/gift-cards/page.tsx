@@ -7,22 +7,12 @@ import { Input } from "@/components/ui/input";
 import { CreditCard, Search } from 'lucide-react';
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
-
-interface GiftCard {
-    documentId: string;
-    id: string;
-    name: string;
-    acquiredDate: string; // Formato de fecha "YYYY-MM-DD"
-    balance: number; // Saldo actual de la tarjeta
-    initialBalance: number; // Saldo inicial de la tarjeta
-    currency: string; // Código de moneda (por ejemplo, CLP)
-    company: string; // Nombre de la empresa emisora
-}
+import {GiftCardParser} from "@/app/interfaces/giftcardInterface";
 
 
 
 export default function GiftCardsPage() {
-    const [giftCards, setGiftCards] = useState<GiftCard[]>([]);
+    const [giftCards, setGiftCards] = useState<GiftCardParser[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
