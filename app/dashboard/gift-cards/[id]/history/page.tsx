@@ -91,7 +91,7 @@ export default function GiftCardHistoryPage() {
                     balance: data.balance,
                     initialBalance: data.initialBalance,
                     expirationDate: data.expirationDate,
-                    transactions: data.consumptionHistories.map((history, index: number) => ({
+                    transactions: data.consumptionHistories.map((history:Transaction, index: number) => ({
                         id: index + 1,
                         date: history.date,
                         amount: history.amount,
