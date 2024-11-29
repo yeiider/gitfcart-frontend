@@ -8,7 +8,7 @@ export async function loginWithRest(email: string, password: string): Promise<Lo
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ identifier: email, password }),
+        body: JSON.stringify({identifier: email, password}),
     });
 
     if (!response.ok) {
@@ -18,7 +18,7 @@ export async function loginWithRest(email: string, password: string): Promise<Lo
     return await response.json();
 }
 
-export async function createWithRest(username: string , password:string , email:string , name:string , lastName:string , rut:string ): Promise<LoginResponseInterface> {
+export async function createWithRest(username: string, password: string, email: string, name: string, lastName: string, rut: string): Promise<LoginResponseInterface> {
 
 
     const apiUrl = `${process.env.URL_BACKEND}api/auth/local/register`
@@ -47,7 +47,54 @@ export async function createWithRest(username: string , password:string , email:
     return await response.json();
 }
 
-export async function isLoggedInServer(req:NextRequest) {
+export async function updateWithRest(token: string, documentId: string, email: string, name: string, lastName: string, rut: string): Promise<LoginResponseInterface> {
+
+
+    const apiUrl = `${process.env.URL_BACKEND}api/users/${documentId}`
+
+    const body = {
+        email,
+        name,
+        lastName,
+        rut,
+    }
+
+    const response = await fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+        throw await response.json();
+    }
+
+    return await response.json();
+}
+
+export async function changePassword(token:string,currentPassword: string, password: string): Promise<LoginResponseInterface> {
+    const url = `${process.env.URL_BACKEND}api/auth/change-password`
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({currentPassword: currentPassword, password, passwordConfirmation: password,}),
+    });
+
+    if (!response.ok) {
+        throw await response.json();
+    }
+
+    return await response.json();
+}
+
+
+export async function isLoggedInServer(req: NextRequest) {
     const token = req.headers.get("cookie")?.split(";").find((c) => c.trim().startsWith("jwt="));
     if (!token) {
         return null;
@@ -105,7 +152,7 @@ export async function isLoggedInClient() {
     }
 }
 
-export function sessionToken(req:NextRequest) {
+export function sessionToken(req: NextRequest) {
     const token = req.headers.get("cookie")?.split(";").find((c) => c.trim().startsWith("jwt="));
     if (!token) {
         return null;

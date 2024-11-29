@@ -6,8 +6,8 @@ export async function middleware(req) {
 
     const jwt = req.cookies.get('jwt')?.value;
 
-    if (!jwt && url.pathname.startsWith("/login")) {
-        url.pathname = "/";
+    if (jwt && url.pathname.startsWith("/login")) {
+        url.pathname = "/dashboard";
         return NextResponse.redirect(url);
     }
 
@@ -28,5 +28,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*", "/login"],
+    matcher: ["/dashboard/:path*" ],
 };

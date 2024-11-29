@@ -1,70 +1,129 @@
 'use client'
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { useRouter } from 'next/navigation'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowLeft, Loader2, User, Lock } from 'lucide-react'
+import {useState} from 'react'
+import {motion} from 'framer-motion'
+import {useRouter} from 'next/navigation'
+import {Button} from "@/components/ui/button"
+import {Input} from "@/components/ui/input"
+import {Label} from "@/components/ui/label"
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
+import {ArrowLeft, Loader2, User, Lock} from 'lucide-react'
+import {useAuth} from "@/app/context/AuthContext";
+import AlertComponent from "@/components/alertComponent";
 
-// Simulación de datos del usuario
-const userData = {
-    name: 'Yeider Adrian',
-    lastname: 'Mina Caicedo',
-    email: 'yeider@example.com',
-    rut: '12345678-9'
-}
-
-export default function SettingsPage() {
-    const [user, setUser] = useState(userData)
+export default function SettingsProfileView() {
+    const {user, setUser} = useAuth();
     const [isLoading, setIsLoading] = useState(false)
     const [currentPassword, setCurrentPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [alertMessage, setAlertMessage] = useState<{
+        message: string,
+        variant: 'success' | 'error' | 'info' | null
+    }>({
+        message: '',
+        variant: null
+    });
     const router = useRouter()
 
     const handleUserInfoUpdate = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsLoading(true)
-        // Simular una llamada a la API para actualizar la información del usuario
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        setIsLoading(false)
+        e.preventDefault();
+        setIsLoading(true);
 
-    }
+        try {
+            const response = await fetch('/api/customer/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: user?.name,
+                    lastName: user?.lastName,
+                    email: user?.email,
+                    rut: user?.rut,
+                    documentId: user?.id !== undefined ? user.id : null
+                }),
+            });
 
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to update user');
+            }
+
+            setUser(result.data);
+            setAlertMessage({message: 'Información actualizada correctamente', variant: 'success'});
+        } catch (error) {
+            if (error instanceof Error) {
+                setAlertMessage({
+                    message: error.message,
+                    variant: 'error',
+                });
+            }
+
+        } finally {
+            setIsLoading(false);
+        }
+    };
     const handlePasswordChange = async (e: React.FormEvent) => {
         e.preventDefault()
         if (newPassword !== confirmPassword) {
-
+            setAlertMessage({
+                message: "Verifique que las contraseñas sean iguales",
+                variant: 'error',
+            });
             return
         }
         setIsLoading(true)
-        // Simular una llamada a la API para cambiar la contraseña
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        setIsLoading(false)
-        setCurrentPassword('')
-        setNewPassword('')
-        setConfirmPassword('')
-
+        try {
+            const response = await fetch('/api/auth/change-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    currentPassword: currentPassword,
+                    password: newPassword,
+                }),
+            });
+            if (response.ok){
+                setAlertMessage({message: 'Se realizo el cambio de la contraseña', variant: 'success'});
+            }
+            setIsLoading(false)
+            setCurrentPassword('')
+            setNewPassword('')
+            setConfirmPassword('')
+        }catch (error){
+            if (error instanceof Error) {
+                setAlertMessage({
+                    message: error.message,
+                    variant: 'error',
+                });
+            }else {
+                setAlertMessage({
+                    message: "Error al cambiar la contraseña",
+                    variant: 'error',
+                });
+            }
+        }
     }
-
     return (
+
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold tracking-tight">Configuración de la Cuenta</h1>
                 <Button variant="ghost" onClick={() => router.push('/dashboard')}>
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    <ArrowLeft className="mr-2 h-4 w-4"/>
                     Volver al Dashboard
                 </Button>
             </div>
+            {alertMessage.message && <AlertComponent message={alertMessage.message} variant={alertMessage.variant}/>}
 
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                initial={{opacity: 0, y: 20}}
+                animate={{opacity: 1, y: 0}}
+                transition={{duration: 0.5}}
             >
                 <Tabs defaultValue="profile" className="space-y-4">
                     <TabsList>
@@ -86,16 +145,16 @@ export default function SettingsPage() {
                                             <Label htmlFor="name">Nombre</Label>
                                             <Input
                                                 id="name"
-                                                value={user.name}
+                                                value={user?.name || ''}
                                                 onChange={(e) => setUser({...user, name: e.target.value})}
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label htmlFor="lastname">Apellido</Label>
+                                            <Label htmlFor="lastName">Apellido</Label>
                                             <Input
-                                                id="lastname"
-                                                value={user.lastname}
-                                                onChange={(e) => setUser({...user, lastname: e.target.value})}
+                                                id="lastName"
+                                                value={user?.lastName || ''}
+                                                onChange={(e) => setUser({...user, lastName: e.target.value})}
                                             />
                                         </div>
                                         <div className="space-y-2">
@@ -103,7 +162,7 @@ export default function SettingsPage() {
                                             <Input
                                                 id="email"
                                                 type="email"
-                                                value={user.email}
+                                                value={user?.email || ''}
                                                 onChange={(e) => setUser({...user, email: e.target.value})}
                                             />
                                         </div>
@@ -111,7 +170,7 @@ export default function SettingsPage() {
                                             <Label htmlFor="rut">RUT</Label>
                                             <Input
                                                 id="rut"
-                                                value={user.rut}
+                                                value={user?.rut || ''}
                                                 onChange={(e) => setUser({...user, rut: e.target.value})}
                                             />
                                         </div>
@@ -119,12 +178,12 @@ export default function SettingsPage() {
                                     <Button className="mt-4" type="submit" disabled={isLoading}>
                                         {isLoading ? (
                                             <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
                                                 Actualizando...
                                             </>
                                         ) : (
                                             <>
-                                                <User className="mr-2 h-4 w-4" />
+                                                <User className="mr-2 h-4 w-4"/>
                                                 Guardar Cambios
                                             </>
                                         )}
@@ -175,12 +234,12 @@ export default function SettingsPage() {
                                     <Button className="mt-4" type="submit" disabled={isLoading}>
                                         {isLoading ? (
                                             <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
                                                 Cambiando...
                                             </>
                                         ) : (
                                             <>
-                                                <Lock className="mr-2 h-4 w-4" />
+                                                <Lock className="mr-2 h-4 w-4"/>
                                                 Cambiar Contraseña
                                             </>
                                         )}
