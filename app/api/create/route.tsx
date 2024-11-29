@@ -3,18 +3,18 @@ import { createWithRest } from '@/lib/useAuth'
 
 export async function POST(request: Request) {
     try {
-        const data = await request.json()
+        const requestData = await request.json()
 
-        const { username, password, email, name, lastName, rut } = data
+        const { username, password, email, name, lastName, rut } = requestData
 
         const userData = await createWithRest(username, password, email, name, lastName, rut)
 
-        const { jwt, user } = userData
+        const { jwt, data } = userData
 
-        if (!jwt || !user) {
+        if (!jwt || !data) {
             throw new Error('Error en la creación del usuario o falta de datos en la respuesta')
         }
-        const response = NextResponse.json({ success: true, message: 'User created successfully', user })
+        const response = NextResponse.json({ success: true, message: 'User created successfully', data })
         response.cookies.set('jwt', jwt, {
             path: '/',
             httpOnly: true,
