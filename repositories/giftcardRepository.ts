@@ -13,9 +13,11 @@ export async function getCustomerGiftcards(documentId:string,token:string): Prom
             }
         },
         variables: {
-            user: {
-                documentId: {
-                    eq: documentId
+            filters:{
+                user: {
+                    documentId: {
+                        eq: documentId
+                    }
                 }
             }
         }

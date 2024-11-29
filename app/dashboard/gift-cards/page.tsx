@@ -8,12 +8,14 @@ import { CreditCard, Search } from 'lucide-react';
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import {GiftCardParser} from "@/app/interfaces/giftcardInterface";
+import EmptyGiftCardState from "@/components/emptyGiftcard";
 
 
 
 export default function GiftCardsPage() {
     const [giftCards, setGiftCards] = useState<GiftCardParser[]>([]);
     const [loading, setLoading] = useState(true);
+    const [errorGc, setErrorGc] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchGiftCards = async () => {
@@ -25,6 +27,10 @@ export default function GiftCardsPage() {
                     },
                 });
                 const data = await response.json();
+                if (data.error) {
+                    setErrorGc(data.error);
+                    return;
+                }
                 setGiftCards(data.recentGiftCards); // Usar el formato de datos del API
             } catch (error) {
                 console.error('Error fetching gift cards:', error);
@@ -37,6 +43,11 @@ export default function GiftCardsPage() {
 
     if (loading) {
         return <GiftCardsSkeleton />;
+    }
+    if (errorGc) {
+        return (
+            <EmptyGiftCardState/>
+        );
     }
 
     return (

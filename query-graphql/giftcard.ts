@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GQL_GET_CUSTOMERS_GIFTCARDS = gql`
-query Nodes {
-  giftCards_connection {
+query Nodes($filters: GiftCardFiltersInput) {
+  giftCards_connection(filters: $filters) {
     nodes {
       documentId
       createdAt
@@ -24,6 +24,9 @@ query Nodes {
         amount
         remainingBalance
         createdAt
+      }
+      user {
+        documentId
       }
     }
     pageInfo {
