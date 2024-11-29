@@ -1,27 +1,22 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ArrowLeft, CreditCard, Calendar, DollarSign } from 'lucide-react'
-import {Skeleton} from "@/components/ui/skeleton";
+import { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, CreditCard, Calendar, DollarSign } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 interface GiftCard {
   id: string;
+  documentId: string;
   balance: number;
   initialBalance: number;
   expirationDate: string;
   purchaseDate: string;
-}
-
-const giftCardData: GiftCard = {
-  id: 'GC-001',
-  balance: 75.50,
-  initialBalance: 100.00,
-  expirationDate: '2024-12-31',
-  purchaseDate: '2024-01-15',
+  companyName: string;
 }
 
 function GiftCardSkeleton() {
@@ -51,28 +46,54 @@ function GiftCardSkeleton() {
           </CardContent>
         </Card>
       </div>
-  )
+  );
 }
 
-
 export default function GiftCardDetailsPage() {
-  const router = useRouter()
-  const params = useParams()
-  const [giftCard, setGiftCard] = useState<GiftCard | null>(null) // Estado con el tipo GiftCard | null
+  const router = useRouter();
+  const params = useParams();
+  const [giftCard, setGiftCard] = useState<GiftCard | null>(null); // Estado con el tipo GiftCard | null
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simular una llamada a la API para obtener los detalles de la gift card
     const fetchGiftCardDetails = async () => {
-      // En una aplicación real, aquí se haría una llamada a la API con el ID
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simular delay de red
-      setGiftCard(giftCardData)
-    }
+      try {
+        const response = await fetch(`/api/customer/giftcard?id=${params.id}`);
+        if (!response.ok) throw new Error("Failed to fetch Gift Card details");
+        const data = await response.json();
+        setGiftCard({
+          id: data.id,
+          documentId:data.documentId,
+          balance: data.balance,
+          initialBalance: data.initialBalance,
+          expirationDate: data.expirationDate,
+          purchaseDate: data.acquiredDate,
+          companyName: data.company,
+        });
+      } catch (error) {
+        console.error("Error fetching Gift Card:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    fetchGiftCardDetails()
-  }, [params.id])
+    fetchGiftCardDetails();
+  }, [params.id]);
+
+  if (loading) {
+    return <GiftCardSkeleton />;
+  }
 
   if (!giftCard) {
-    return <GiftCardSkeleton />
+    return (
+        <div className="text-center">
+          <p className="text-red-500">No se pudo encontrar la Gift Card.</p>
+          <Button variant="ghost" onClick={() => router.back()}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Volver
+          </Button>
+        </div>
+    );
   }
 
   return (
@@ -146,11 +167,14 @@ export default function GiftCardDetailsPage() {
               </div>
 
               <div className="flex justify-end">
-                <Button>Ver Historial de Transacciones</Button>
+                <Link href={`/dashboard/gift-cards/${giftCard.documentId}/history`}>
+                  <Button>Ver Historial de Transacciones</Button>
+                </Link>
+
               </div>
             </CardContent>
           </Card>
         </motion.div>
       </div>
-  )
+  );
 }

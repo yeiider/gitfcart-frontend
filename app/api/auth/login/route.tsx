@@ -8,7 +8,6 @@ export async function POST(request: Request) {
         const { jwt, data } = dataResponse;
         const response = NextResponse.json({ message: "Login successful", user: data });
         response.cookies.set("jwt", jwt, {path: "/", httpOnly: true, secure: process.env.NODE_ENV === "production",});
-
         return response;
     } catch (error) {
         console.error("Error en el login:", error);

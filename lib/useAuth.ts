@@ -18,6 +18,35 @@ export async function loginWithRest(email: string, password: string): Promise<Lo
     return await response.json();
 }
 
+export async function createWithRest(username, password, email, name, lastName, rut): Promise<LoginResponseInterface> {
+
+
+    const apiUrl = `${process.env.URL_BACKEND}api/auth/local/register`
+
+    const body = {
+        username,
+        email,
+        password,
+        name,
+        lastName,
+        rut,
+    }
+
+    const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+        throw await response.json();
+    }
+
+    return await response.json();
+}
+
 export async function isLoggedInServer(req:NextRequest) {
     const token = req.headers.get("cookie")?.split(";").find((c) => c.trim().startsWith("jwt="));
     if (!token) {
