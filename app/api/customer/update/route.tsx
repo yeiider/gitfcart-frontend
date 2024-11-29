@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {cookies} from "next/headers";
 import {updateWithRest} from "@/lib/useAuth";
-import {CreateResponseInterface, LoginResponseInterface} from "@/app/interfaces/loginResponseInterface";
+import {CreateResponseInterface} from "@/app/interfaces/loginResponseInterface";
 
 export async function PUT(request: Request) {
     const cookieStore = cookies();
