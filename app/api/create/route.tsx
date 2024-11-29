@@ -1,5 +1,3 @@
-// app/api/create/route.ts
-
 import { NextResponse } from 'next/server'
 import { createWithRest } from '@/lib/useAuth'
 
@@ -25,8 +23,12 @@ export async function POST(request: Request) {
 
 
         return response
-    } catch (error: any) {
-        console.error('Error al crear el usuario:', error)
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error al crear el usuario:', error)
+            return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+        }else {
+            return NextResponse.json({ success: false, error: "Error de en el servidor"}, { status: 500 })
+        }
     }
 }
