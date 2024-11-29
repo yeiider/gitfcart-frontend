@@ -8,8 +8,26 @@ import { CreditCard, Search } from 'lucide-react';
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
+interface GiftCard {
+    documentId: string;
+    id: string;
+    name: string;
+    acquiredDate: string; // Formato de fecha "YYYY-MM-DD"
+    balance: number; // Saldo actual de la tarjeta
+    initialBalance: number; // Saldo inicial de la tarjeta
+    currency: string; // Código de moneda (por ejemplo, CLP)
+    company: string; // Nombre de la empresa emisora
+}
+
+interface GiftCardSummary {
+    totalActiveGiftCards: number; // Total de tarjetas activas
+    totalBalance: number; // Balance total de todas las tarjetas
+    recentGiftCards: GiftCard[]; // Lista de tarjetas recientes
+    transactionCount: number; // Cantidad de transacciones realizadas
+}
+
 export default function GiftCardsPage() {
-    const [giftCards, setGiftCards] = useState([]);
+    const [giftCards, setGiftCards] = useState<GiftCard[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
