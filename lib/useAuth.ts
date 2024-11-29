@@ -1,4 +1,4 @@
-import {LoginResponseInterface} from "@/app/interfaces/loginResponseInterface";
+import {CreateResponseInterface, LoginResponseInterface} from "@/app/interfaces/loginResponseInterface";
 import {NextRequest} from "next/server";
 
 export async function loginWithRest(email: string, password: string): Promise<LoginResponseInterface> {
@@ -18,7 +18,7 @@ export async function loginWithRest(email: string, password: string): Promise<Lo
     return await response.json();
 }
 
-export async function createWithRest(username: string, password: string, email: string, name: string, lastName: string, rut: string): Promise<LoginResponseInterface> {
+export async function createWithRest(username: string, password: string, email: string, name: string, lastName: string, rut: string): Promise<CreateResponseInterface> {
 
 
     const apiUrl = `${process.env.URL_BACKEND}api/auth/local/register`
@@ -47,7 +47,7 @@ export async function createWithRest(username: string, password: string, email: 
     return await response.json();
 }
 
-export async function updateWithRest(token: string, documentId: string, email: string, name: string, lastName: string, rut: string): Promise<LoginResponseInterface> {
+export async function updateWithRest(token: string, documentId: string, email: string, name: string, lastName: string, rut: string): Promise<CreateResponseInterface> {
 
 
     const apiUrl = `${process.env.URL_BACKEND}api/users/${documentId}`
@@ -75,7 +75,7 @@ export async function updateWithRest(token: string, documentId: string, email: s
     return await response.json();
 }
 
-export async function changePassword(token:string,currentPassword: string, password: string): Promise<LoginResponseInterface> {
+export async function changePassword(token:string,currentPassword: string, password: string): Promise<CreateResponseInterface> {
     const url = `${process.env.URL_BACKEND}api/auth/change-password`
     const response = await fetch(url, {
         method: "POST",

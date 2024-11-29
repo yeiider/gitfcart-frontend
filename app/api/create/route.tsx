@@ -9,12 +9,13 @@ export async function POST(request: Request) {
 
         const userData = await createWithRest(username, password, email, name, lastName, rut)
 
-        const { jwt, data } = userData
+        const { jwt, user } = userData
+        console.log(userData)
 
-        if (!jwt || !data) {
+        if (!jwt || !user) {
             throw new Error('Error en la creación del usuario o falta de datos en la respuesta')
         }
-        const response = NextResponse.json({ success: true, message: 'User created successfully', data })
+        const response = NextResponse.json({ success: true, message: 'User created successfully', user })
         response.cookies.set('jwt', jwt, {
             path: '/',
             httpOnly: true,

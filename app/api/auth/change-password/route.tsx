@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {cookies} from "next/headers";
 import {changePassword} from "@/lib/useAuth";
-import {LoginResponseInterface} from "@/app/interfaces/loginResponseInterface";
+import {CreateResponseInterface, LoginResponseInterface} from "@/app/interfaces/loginResponseInterface";
 
 export async function POST(request: Request) {
     const cookieStore = cookies();
@@ -31,8 +31,8 @@ export async function POST(request: Request) {
             currentPassword,
         };
 
-        const dataResponse: LoginResponseInterface = await changePassword(token, currentPassword, password);
-        if (!dataResponse.data) {
+        const dataResponse: CreateResponseInterface = await changePassword(token, currentPassword, password);
+        if (!dataResponse.user) {
             console.log()
         }
         console.log(dataResponse)
