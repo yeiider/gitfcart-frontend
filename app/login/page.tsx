@@ -69,7 +69,7 @@ export default function LoginPage() {
                 <h1 className="text-3xl font-bold text-center">Bienvenido a GiftCard Pro</h1>
                 <div className="grid gap-8 md:grid-cols-2">
 
-                    <Card className="w-[350px]">
+                    <Card >
                         {error && <Alert variant="destructive">
                             <AlertCircle className="h-4 w-4"/>
                             <AlertTitle>Error</AlertTitle>
