@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import {useRef, useState, useEffect} from 'react';
 import Link from 'next/link';
 import {usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,9 +28,30 @@ const menuItems = [
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
+  const sidebarRef = useRef<HTMLDivElement>(null)
 
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMobileMenuOpen])
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [pathname])
   const handleLogout = async () => {
     try {
       const response = await fetch('/api/auth/logout', {
@@ -71,6 +92,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <AnimatePresence mode="wait">
             {(isMobileMenuOpen || !isMobileMenuOpen) && (
                 <motion.aside
+                    ref={sidebarRef}
                     initial={{ x: -300, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: -300, opacity: 0 }}
@@ -92,6 +114,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                   <Button
                                       variant={isActive ? 'secondary' : 'ghost'}
                                       className="w-full justify-start"
+                                      onClick={() => setIsMobileMenuOpen(false)}
                                   >
                                     <item.icon className="mr-2 h-4 w-4" />
                                     {item.title}
