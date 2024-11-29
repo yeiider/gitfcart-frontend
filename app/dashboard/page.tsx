@@ -1,11 +1,10 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreditCard, DollarSign, History, Gift, Plus, RefreshCcw } from 'lucide-react';
+import { CreditCard, DollarSign, History } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { GiftCardSummary } from "@/app/interfaces/giftcardInterface";
-import {Button} from "@/components/ui/button";
 import EmptyGiftCardState from "@/components/emptyGiftcard";
 
 function DashboardSkeleton() {
