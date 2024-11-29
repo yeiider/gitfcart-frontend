@@ -63,7 +63,7 @@ function DashboardSkeleton() {
 }
 
 export default function DashboardPage() {
-  const [data, setData] = useState<GiftCardSummary>(null);
+  const [data, setData] = useState<GiftCardSummary | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
