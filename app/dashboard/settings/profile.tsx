@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowLeft, Loader2, User, Lock } from 'lucide-react'
 
+// Simulación de datos del usuario
 const userData = {
     name: 'Yeider Adrian',
     lastname: 'Mina Caicedo',

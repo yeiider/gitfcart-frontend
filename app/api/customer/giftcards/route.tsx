@@ -1,4 +1,4 @@
-import {getCustomerGiftcard, getCustomerGiftcards} from "@/repositories/giftcardRepository";
+import {getCustomerGiftcards} from "@/repositories/giftcardRepository";
 import { User } from "@/app/interfaces/userInterface";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";

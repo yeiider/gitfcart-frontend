@@ -16,7 +16,7 @@ interface FormData {
   confirmPassword: string
   email: string
   name: string
-  lastname: string
+  lastName: string
   rut: string
 }
 
@@ -24,15 +24,23 @@ interface ErrorState {
   [key: string]: string | undefined
 }
 
-// Etiquetas traducidas
-const fieldLabels: { [key in keyof FormData]: string } = {
-  username: 'Nombre de usuario',
-  password: 'Contraseña',
-  confirmPassword: 'Confirmar contraseña',
-  email: 'Correo electrónico',
-  name: 'Nombre',
-  lastname: 'Apellido',
-  rut: 'RUT'
+const validateRUT = (rut: string): boolean => {
+  const cleanRut = rut.replace(/\./g, '').replace('-', '')
+  const body = cleanRut.slice(0, -1)
+  const dv = cleanRut.slice(-1).toUpperCase()
+
+  let sum = 0
+  let multiplier = 2
+
+  for (let i = body.length - 1; i >= 0; i--) {
+    sum += parseInt(body[i], 10) * multiplier
+    multiplier = multiplier === 7 ? 2 : multiplier + 1
+  }
+
+  const calculatedDV = 11 - (sum % 11)
+  const expectedDV = calculatedDV === 11 ? '0' : calculatedDV === 10 ? 'K' : calculatedDV.toString()
+
+  return expectedDV === dv
 }
 
 export default function RegisterPage() {
@@ -42,7 +50,7 @@ export default function RegisterPage() {
     confirmPassword: '',
     email: '',
     name: '',
-    lastname: '',
+    lastName: '',
     rut: ''
   })
   const [errors, setErrors] = useState<ErrorState>({})
@@ -51,45 +59,20 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
   const router = useRouter()
 
-  const isValidChileanRUT = (rut: string): boolean => {
-    if (!/^\d{1,8}-[\dkK]$/.test(rut)) return false; // Validar formato básico
-
-    const [numberPart, verifier] = rut.split('-');
-    const digits = numberPart.split('').reverse().map(Number);
-
-    let sum = 0;
-    let multiplier = 2;
-
-    for (const digit of digits) {
-      sum += digit * multiplier;
-      multiplier = multiplier === 7 ? 2 : multiplier + 1;
-    }
-
-    const remainder = sum % 11;
-    const calculatedVerifier = 11 - remainder === 11 ? '0' : 11 - remainder === 10 ? 'K' : (11 - remainder).toString();
-
-    return calculatedVerifier.toUpperCase() === verifier.toUpperCase();
-  };
-
-
   const validateForm = (): boolean => {
-    const newErrors: ErrorState = {};
+    const newErrors: ErrorState = {}
 
-    if (!formData.username.trim()) newErrors.username = 'El nombre de usuario es obligatorio';
-    if (!formData.password || formData.password.length < 6) newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
-    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Las contraseñas no coinciden';
-    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'El correo electrónico no es válido';
-    if (!formData.name.trim()) newErrors.name = 'El nombre es obligatorio';
-    if (!formData.lastname.trim()) newErrors.lastname = 'El apellido es obligatorio';
+    if (!formData.username.trim()) newErrors.username = 'El nombre de usuario es obligatorio'
+    if (!formData.password || formData.password.length < 6) newErrors.password = 'La contraseña debe tener al menos 6 caracteres'
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Las contraseñas no coinciden'
+    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'El correo electrónico no es válido'
+    if (!formData.name.trim()) newErrors.name = 'El nombre es obligatorio'
+    if (!formData.lastName.trim()) newErrors.lastname = 'El apellido es obligatorio'
+    if (!formData.rut.trim() || !validateRUT(formData.rut)) newErrors.rut = 'El RUT no es válido (ejemplo: 12345678-9)'
 
-    if (!formData.rut.trim() || !isValidChileanRUT(formData.rut)) {
-      newErrors.rut = 'El RUT no es válido (formato: 12345678-9 y dígito verificador correcto)';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target
@@ -155,25 +138,81 @@ export default function RegisterPage() {
                   {errors.api && (
                       <p className="text-red-500 text-sm mb-2">{errors.api}</p>
                   )}
-                  {Object.keys(formData).map((field) => (
-                      <div className="flex flex-col space-y-1.5" key={field}>
-                        <Label htmlFor={field}>
-                          {fieldLabels[field as keyof FormData]}
-                        </Label>
+                  {[
+                    { name: 'username', label: 'Nombre de Usuario' },
+                    { name: 'email', label: 'Correo Electrónico' },
+                    { name: 'name', label: 'Nombre' },
+                    { name: 'lastName', label: 'Apellido' },
+                    { name: 'rut', label: 'RUT' }
+                  ].map(({ name, label }) => (
+                      <div className="flex flex-col space-y-1.5" key={name}>
+                        <Label htmlFor={name}>{label}</Label>
                         <Input
-                            id={field}
-                            name={field}
-                            type={field === 'password' || field === 'confirmPassword' ? 'password' : 'text'}
-                            placeholder={`Ingresa tu ${fieldLabels[field as keyof FormData].toLowerCase()}`}
-                            value={formData[field as keyof FormData]}
+                            id={name}
+                            name={name}
+                            type="text"
+                            placeholder={`Ingresa tu ${label.toLowerCase()}`}
+                            value={formData[name as keyof FormData]}
                             onChange={handleChange}
                             required
                         />
-                        {errors[field] && (
-                            <p className="text-red-500 text-sm">{errors[field]}</p>
+                        {errors[name] && (
+                            <p className="text-red-500 text-sm">{errors[name]}</p>
                         )}
                       </div>
                   ))}
+                  <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="password">Contraseña</Label>
+                    <div className="relative">
+                      <Input
+                          id="password"
+                          name="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Ingresa tu contraseña"
+                          value={formData.password}
+                          onChange={handleChange}
+                          required
+                      />
+                      <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-0 top-0"
+                          onClick={() => togglePasswordVisibility('password')}
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                    {errors.password && (
+                        <p className="text-red-500 text-sm">{errors.password}</p>
+                    )}
+                  </div>
+                  <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
+                    <div className="relative">
+                      <Input
+                          id="confirmPassword"
+                          name="confirmPassword"
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="Confirma tu contraseña"
+                          value={formData.confirmPassword}
+                          onChange={handleChange}
+                          required
+                      />
+                      <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-0 top-0"
+                          onClick={() => togglePasswordVisibility('confirmPassword')}
+                      >
+                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                    {errors.confirmPassword && (
+                        <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
+                    )}
+                  </div>
                 </div>
                 <Button className="w-full mt-6" type="submit" disabled={isLoading}>
                   {isLoading ? (
