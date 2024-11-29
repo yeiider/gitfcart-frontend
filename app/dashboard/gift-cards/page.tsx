@@ -19,12 +19,7 @@ interface GiftCard {
     company: string; // Nombre de la empresa emisora
 }
 
-interface GiftCardSummary {
-    totalActiveGiftCards: number; // Total de tarjetas activas
-    totalBalance: number; // Balance total de todas las tarjetas
-    recentGiftCards: GiftCard[]; // Lista de tarjetas recientes
-    transactionCount: number; // Cantidad de transacciones realizadas
-}
+
 
 export default function GiftCardsPage() {
     const [giftCards, setGiftCards] = useState<GiftCard[]>([]);
