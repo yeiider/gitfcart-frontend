@@ -32,7 +32,7 @@ export async function GET(request: Request) {
             );
         }
 
-        const giftcardResponse = await getCustomerGiftcard(user.documentId, token, giftCardId);
+        const giftcardResponse = await getCustomerGiftcard(user.documentId||"", token, giftCardId);
         console.log(giftcardResponse);
         if (!giftcardResponse || giftcardResponse.documentId !== giftCardId) {
             return NextResponse.json(

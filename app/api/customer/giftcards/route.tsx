@@ -22,7 +22,7 @@ export async function GET() {
             );
         }
 
-        const giftcardResponse = await getCustomerGiftcards(user.documentId, token);
+        const giftcardResponse = await getCustomerGiftcards(user.documentId||"", token);
 
         if (!giftcardResponse || giftcardResponse.nodes.length === 0) {
             return NextResponse.json(
